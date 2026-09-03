@@ -1,0 +1,1867 @@
+<!doctype html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pulse — High Performance Athletic Club</title>
+
+  <!-- Tipografia & Ícones -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap"
+    rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    /* ===== 1. DESIGN SYSTEM & VARIÁVEIS CSS ===== */
+    :root {
+      /* ===== VARIÁVEIS DE COR REVISADAS (WCAG 1.4.11 COMPLIANT) ===== */
+
+      --bg-primary: #0a0b10;
+      --bg-card: #121520;
+      --bg-card-alt: #181d2b;
+
+      /* CORRIGIDO: #54638a atinge 3.27:1 vs #121520 e 3.46:1 vs #0a0b10 */
+      --border-color: #54638a;
+      --border-hover: #7386ba;
+      /* Destaque proporcional ao foco/hover */
+
+      --text-primary: #f8fafc;
+      --text-secondary: #cbd5e1;
+      --text-muted: #94a3b8;
+      --accent-color: #ccff00;
+      --accent-text: #0a0b10;
+      --btn-sec-bg: #181d2b;
+      --btn-sec-hover: #262e45;
+      --focus-outline-color: #ccff00;
+
+      --focus-outline-width: 3px;
+      --font-scale: 100%;
+
+      /* Fontes */
+      --font-main: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+      --font-display: "Space Grotesk", sans-serif;
+    }
+
+    /* Modo Claro (White) */
+    body.theme-light {
+
+      --bg-primary: #f8fafc;
+      --bg-card: #ffffff;
+      --bg-card-alt: #f1f5f9;
+
+      /* CORRIGIDO: #64748b atinge 3.52:1 vs #ffffff */
+      --border-color: #64748b;
+      --border-hover: #334155;
+
+      --text-primary: #0f172a;
+      --text-secondary: #334155;
+      --text-muted: #475569;
+      --accent-color: #15803d;
+      --accent-text: #ffffff;
+      --btn-sec-bg: #f1f5f9;
+      --btn-sec-hover: #e2e8f0;
+      --focus-outline-color: #15803d;
+    }
+
+    /* Modo Alto Contraste */
+    body.high-contrast {
+      --bg-primary: #000000 !important;
+      --bg-card: #000000 !important;
+      --bg-card-alt: #000000 !important;
+      --border-color: #ffffff !important;
+      --border-hover: #ffff00 !important;
+      --text-primary: #ffffff !important;
+      --text-secondary: #ffffff !important;
+      --text-muted: #ffff00 !important;
+      --accent-color: #ffff00 !important;
+      --accent-text: #000000 !important;
+      --btn-sec-bg: #000000 !important;
+      --btn-sec-hover: #1a1a1a !important;
+      --focus-outline-color: #ffff00 !important;
+      --focus-outline-width: 4px !important;
+    }
+
+    /* ===== 2. RESETS E BASE ===== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: var(--font-main);
+    }
+
+    html {
+      scroll-behavior: smooth;
+      font-size: var(--font-scale);
+    }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      overflow-x: hidden;
+      transition:
+        background-color 0.25s ease,
+        color 0.25s ease;
+    }
+
+    /* SKIP LINK */
+    .skip-link {
+      position: fixed;
+      top: -100px;
+      left: 20px;
+      z-index: 10001;
+      padding: 12px 20px;
+      background: var(--accent-color);
+      color: var(--accent-text);
+      font-weight: 800;
+      text-decoration: none;
+      border-radius: 4px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+      transition: top 0.2s ease-in-out;
+    }
+
+    .skip-link:focus {
+      top: 20px;
+    }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* FOCO VISÍVEL PADRONIZADO */
+    a:focus-visible,
+    button:focus-visible,
+    input:focus-visible,
+    select:focus-visible {
+      outline: var(--focus-outline-width) solid var(--focus-outline-color);
+      outline-offset: 4px;
+    }
+
+    /* OPÇÕES DO PAINEL DE ACESSIBILIDADE */
+    body.focus-highlighted *:focus-visible {
+      outline: 5px solid var(--accent-color) !important;
+      outline-offset: 6px !important;
+      box-shadow: 0 0 0 10px rgba(0, 0, 0, 0.9) !important;
+    }
+
+    body.links-highlighted a {
+      text-decoration: underline !important;
+      text-underline-offset: 6px !important;
+      text-decoration-thickness: 3px !important;
+      font-weight: 800 !important;
+    }
+
+    body.reduced-motion *,
+    body.reduced-motion ::before,
+    body.reduced-motion ::after {
+      animation: none !important;
+      transition: none !important;
+      scroll-behavior: auto !important;
+    }
+
+    /* ===== 3. TIPOGRAFIA EDITORIAL E ESTRUTURA ===== */
+    .tag-secao {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-display);
+      font-size: 0.8125rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--accent-color);
+      margin-bottom: 12px;
+    }
+
+    body.theme-light .tag-secao {
+      color: var(--accent-color);
+    }
+
+    .titulo-secao {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+
+    .subtitulo-secao {
+      color: var(--text-secondary);
+      font-size: 1.0625rem;
+      max-width: 600px;
+      margin-top: 12px;
+    }
+
+    .cabecalho-secao-bloco {
+      margin-bottom: 48px;
+    }
+
+    /* ===== 4. COMPONENTES REFORMULADOS ===== */
+    .btn-primario {
+      background-color: var(--accent-color);
+      color: var(--accent-text);
+      padding: 14px 28px;
+      border-radius: 4px;
+      font-weight: 800;
+      font-size: 0.9375rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition:
+        background-color 0.2s ease,
+        transform 0.2s ease;
+    }
+
+    .btn-primario:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.1);
+    }
+
+    .btn-secundario {
+      background-color: var(--btn-sec-bg);
+      color: var(--text-primary);
+      padding: 14px 28px;
+      border-radius: 4px;
+      font-weight: 700;
+      font-size: 0.9375rem;
+      text-decoration: none;
+      border: 1px solid var(--border-color);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease;
+    }
+
+    .btn-secundario:hover {
+      background-color: var(--btn-sec-hover);
+      border-color: var(--border-hover);
+      transform: translateY(-2px);
+    }
+
+    /* Painel Estrutural Modular */
+    .painel-estrutural {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 32px;
+      transition:
+        border-color 0.25s ease,
+        transform 0.25s ease;
+    }
+
+    .painel-estrutural:hover {
+      border-color: var(--border-hover);
+    }
+
+    /* ===== 5. CABEÇALHO & NAVEGAÇÃO ===== */
+    .cabecalho {
+      position: sticky;
+      top: 0;
+      background-color: var(--bg-primary);
+      border-bottom: 1px solid var(--border-color);
+      z-index: 1000;
+      padding: 20px 0;
+      transition: background-color 0.25s ease;
+    }
+
+    .cabecalho-conteudo {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-family: var(--font-display);
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      text-decoration: none;
+      letter-spacing: -0.03em;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .logo-indicador {
+      width: 10px;
+      height: 10px;
+      background-color: var(--accent-color);
+      border-radius: 2px;
+      display: inline-block;
+    }
+
+    .menu-links {
+      display: flex;
+      gap: 36px;
+      list-style: none;
+      align-items: center;
+    }
+
+    .menu-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.9375rem;
+      font-weight: 600;
+      transition: color 0.2s ease;
+      padding: 6px 0;
+    }
+
+    .menu-links a:hover {
+      color: var(--accent-color);
+    }
+
+    .btn-hamburguer {
+      display: none;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 10px 14px;
+      border-radius: 4px;
+      cursor: pointer;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.875rem;
+      font-weight: 700;
+    }
+
+    .menu-mobile {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background-color: var(--bg-card);
+      border-bottom: 2px solid var(--border-color);
+      padding: 24px;
+      z-index: 999;
+    }
+
+    .menu-mobile.ativo {
+      display: block;
+    }
+
+    .menu-mobile-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .menu-mobile-links a {
+      color: var(--text-primary);
+      text-decoration: none;
+      font-size: 1.125rem;
+      font-weight: 700;
+      display: block;
+      padding: 12px;
+      border-radius: 4px;
+      border-left: 3px solid transparent;
+    }
+
+    .menu-mobile-links a:hover,
+    .menu-mobile-links a:focus {
+      background-color: var(--btn-sec-bg);
+      border-left-color: var(--accent-color);
+    }
+
+    /* ===== 6. HERO SECTION REFORMULADA ===== */
+    .secao-hero {
+      padding: 80px 0 100px 0;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 48px;
+      align-items: center;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .hero-especificacoes {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 6px 14px;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      font-size: 0.8125rem;
+      font-weight: 700;
+      font-family: var(--font-display);
+      margin-bottom: 24px;
+    }
+
+    .hero-status-dot {
+      width: 8px;
+      height: 8px;
+      background-color: var(--accent-color);
+      border-radius: 50%;
+    }
+
+    .hero-titulo {
+      font-family: var(--font-display);
+      font-size: clamp(2.75rem, 5.5vw, 4.5rem);
+      font-weight: 700;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      margin-bottom: 24px;
+    }
+
+    .hero-titulo span {
+      color: var(--accent-color);
+      display: block;
+    }
+
+    .hero-texto {
+      color: var(--text-secondary);
+      font-size: 1.1875rem;
+      margin-bottom: 40px;
+      max-width: 540px;
+    }
+
+    .hero-botoes {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 48px;
+    }
+
+    .hero-metricas {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      padding-top: 32px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .metrica-num {
+      font-family: var(--font-display);
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .metrica-label {
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+    }
+
+    .hero-quadro-imagem {
+      position: relative;
+    }
+
+    .hero-quadro-imagem img {
+      width: 100%;
+      height: 520px;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      display: block;
+    }
+
+    .hero-overlay-card {
+      position: absolute;
+      bottom: -24px;
+      left: -24px;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      padding: 20px 24px;
+      border-radius: 6px;
+      max-width: 280px;
+    }
+
+    /* ===== 7. SEÇÃO BENEFÍCIOS (BENTO GRID) ===== */
+    .secao {
+      padding: 100px 0;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .grid-bento {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 24px;
+    }
+
+    .bento-destaque {
+      grid-column: span 7;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .bento-item {
+      grid-column: span 5;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 32px;
+    }
+
+    .bento-item-terco {
+      grid-column: span 4;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 32px;
+    }
+
+    .bento-num {
+      font-family: var(--font-display);
+      font-size: 0.875rem;
+      font-weight: 700;
+      color: var(--accent-color);
+      margin-bottom: 16px;
+    }
+
+    .bento-titulo {
+      font-family: var(--font-display);
+      font-size: 1.375rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .bento-texto {
+      color: var(--text-secondary);
+      font-size: 0.9375rem;
+    }
+
+    /* ===== 8. PLANOS ===== */
+    .grid-planos {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      align-items: stretch;
+    }
+
+    .card-plano {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+    }
+
+    .card-plano.destacado {
+      border: 2px solid var(--accent-color);
+      background-color: var(--bg-card-alt);
+    }
+
+    .tag-plano-destaque {
+      position: absolute;
+      top: -14px;
+      right: 24px;
+      background-color: var(--accent-color);
+      color: var(--accent-text);
+      font-family: var(--font-display);
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 2px;
+    }
+
+    .plano-nome {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .preco-valor {
+      font-family: var(--font-display);
+      font-size: 3rem;
+      font-weight: 700;
+      line-height: 1;
+      margin: 20px 0 8px 0;
+    }
+
+    .preco-periodo {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+
+    .lista-recursos {
+      list-style: none;
+      margin: 32px 0;
+      border-top: 1px solid var(--border-color);
+      padding-top: 24px;
+    }
+
+    .lista-recursos li {
+      margin-bottom: 14px;
+      color: var(--text-secondary);
+      font-size: 0.9375rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .lista-recursos li i {
+      color: var(--accent-color);
+      flex-shrink: 0;
+    }
+
+    /* ===== 9. DEPOIMENTOS ===== */
+    .grid-depoimentos {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .depoimento-aspas {
+      color: var(--accent-color);
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 16px;
+    }
+
+    .depoimento-texto {
+      color: var(--text-primary);
+      font-size: 1rem;
+      margin-bottom: 24px;
+      font-style: italic;
+    }
+
+    .usuario-info {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      border-top: 1px solid var(--border-color);
+      padding-top: 16px;
+    }
+
+    .usuario-foto {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1px solid var(--border-color);
+    }
+
+    /* ===== 10. FORMULÁRIO ===== */
+    .secao-cadastro-layout {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 48px;
+      align-items: start;
+    }
+
+    .grupo-campo {
+      margin-bottom: 24px;
+    }
+
+    .grupo-campo label {
+      display: block;
+      font-size: 0.8125rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+      color: var(--text-secondary);
+    }
+
+    .campo-obrigatorio {
+      color: var(--accent-color);
+    }
+
+    .campo-texto,
+    .campo-select {
+      width: 100%;
+      padding: 16px;
+      background-color: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      color: var(--text-primary);
+      font-size: 1rem;
+      transition: border-color 0.2s ease;
+    }
+
+    .campo-texto:focus,
+    .campo-select:focus {
+      border-color: var(--accent-color);
+    }
+
+    .mensagem-sucesso {
+      display: none;
+      margin-top: 20px;
+      padding: 16px;
+      background-color: rgba(204, 255, 0, 0.1);
+      border: 1px solid var(--accent-color);
+      border-radius: 4px;
+      color: var(--text-primary);
+      font-weight: 700;
+      text-align: center;
+    }
+
+    /* ===== 11. DOCK FLUTUANTE DE UTILITÁRIOS ===== */
+    .dock-utilitarios {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      z-index: 9998;
+    }
+
+    .btn-dock {
+      background-color: var(--bg-card);
+      color: var(--text-primary);
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      padding: 12px 16px;
+      font-size: 0.875rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+      transition:
+        border-color 0.2s ease,
+        transform 0.2s ease,
+        opacity 0.2s ease;
+    }
+
+    .btn-dock:hover {
+      border-color: var(--accent-color);
+      color: var(--accent-color);
+      transform: translateY(-2px);
+    }
+    
+
+    /* Botão Voltar ao Topo */
+    .btn-voltar-topo {
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(10px);
+    }
+
+    .btn-voltar-topo.visivel {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    /* PAINEL DE ACESSIBILIDADE MODAL */
+    .painel-acessibilidade {
+      position: fixed;
+      bottom: 80px;
+      right: 24px;
+      width: 360px;
+      max-width: calc(100vw - 32px);
+      background-color: var(--bg-card);
+      border: 2px solid var(--border-color);
+      border-radius: 8px;
+      padding: 24px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+      z-index: 10000;
+      display: none;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .painel-acessibilidade.aberto {
+      display: flex;
+    }
+
+    .painel-cabecalho {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 12px;
+    }
+
+    .painel-titulo {
+      font-family: var(--font-display);
+      font-size: 1.125rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-fechar-painel {
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      font-size: 1.25rem;
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 4px;
+    }
+
+    .btn-fechar-painel:hover {
+      color: var(--text-primary);
+      background-color: var(--btn-sec-hover);
+    }
+
+    .painel-secao-titulo {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+      margin-bottom: 10px;
+    }
+
+    .grid-botoes-acessibilidade {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+    }
+
+    .btn-opcao-acessibilidade {
+      background-color: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 10px;
+      border-radius: 4px;
+      font-size: 0.8125rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease;
+    }
+
+    .btn-opcao-acessibilidade:hover {
+      border-color: var(--border-hover);
+    }
+
+    .btn-opcao-acessibilidade[aria-pressed="true"] {
+      background-color: var(--accent-color);
+      color: var(--accent-text);
+      border-color: var(--accent-color);
+    }
+
+    .btn-reset-acessibilidade {
+      width: 100%;
+      background-color: transparent;
+      border: 1px dashed var(--border-color);
+      color: var(--text-secondary);
+      padding: 10px;
+      border-radius: 4px;
+      font-size: 0.8125rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn-reset-acessibilidade:hover {
+      background-color: var(--btn-sec-hover);
+      color: var(--text-primary);
+    }
+
+    /* ===== 12. RODAPÉ ===== */
+    .rodape {
+      padding: 60px 0;
+      border-top: 1px solid var(--border-color);
+      color: var(--text-muted);
+      font-size: 0.875rem;
+    }
+
+    .rodape-conteudo {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    /* ===== 13. RESPONSIVIDADE ADAPTATIVA ===== */
+    @media (max-width: 1024px) {
+      .secao-hero {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+
+      .hero-quadro-imagem img {
+        height: 400px;
+      }
+
+      .grid-bento {
+        grid-template-columns: 1fr;
+      }
+
+      .bento-destaque,
+      .bento-item,
+      .bento-item-terco {
+        grid-column: span 1;
+      }
+
+      .grid-planos,
+      .grid-depoimentos {
+        grid-template-columns: 1fr;
+      }
+
+      .secao-cadastro-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+
+      .nav-desktop,
+      .btn-header-desktop {
+        display: none;
+      }
+
+      .btn-hamburguer {
+        display: inline-flex;
+      }
+
+      .hero-metricas {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+
+      .hero-overlay-card {
+        position: relative;
+        bottom: 0;
+        left: 0;
+        max-width: 100%;
+        margin-top: 16px;
+      }
+
+      .dock-utilitarios {
+        bottom: 16px;
+        right: 16px;
+      }
+
+      .painel-acessibilidade {
+        bottom: 70px;
+        right: 16px;
+      }
+    }
+
+    /* PREFERS REDUCED MOTION */
+    @media (prefers-reduced-motion: reduce) {
+
+      *,
+      ::before,
+      ::after {
+        animation: none !important;
+        transition: none !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- SKIP LINK (ACESSÍVEL VIA TECLADO) -->
+  <a href="#conteudo-principal" class="skip-link">
+    Pular para o conteúdo principal
+  </a>
+
+  <!-- CABEÇALHO DA PÁGINA -->
+  <header class="cabecalho">
+    <div class="container cabecalho-conteudo">
+      <a href="#inicio" class="logo" aria-label="Pulse Athletic Club - Página inicial">
+        <span class="logo-indicador" aria-hidden="true"></span>
+        PULSE
+      </a>
+
+      <nav class="nav-desktop" aria-label="Navegação principal">
+        <ul class="menu-links">
+          <li><a href="#inicio">Início</a></li>
+          <li><a href="#beneficios">Metodologia</a></li>
+          <li><a href="#planos">Planos</a></li>
+          <li><a href="#depoimentos">Depoimentos</a></li>
+        </ul>
+      </nav>
+
+      <a href="#cadastro" class="btn-primario btn-header-desktop">
+        Matricular-se
+        <i data-lucide="arrow-up-right" aria-hidden="true"></i>
+      </a>
+
+      <!-- Menu Mobile Trigger -->
+      <button id="btn-hamburguer" class="btn-hamburguer" aria-label="Abrir menu de navegação" aria-expanded="false"
+        aria-controls="menu-mobile">
+        <i data-lucide="menu" aria-hidden="true"></i>
+        <span>Menu</span>
+      </button>
+
+      <!-- Menu Mobile Drawer -->
+      <div id="menu-mobile" class="menu-mobile" aria-hidden="true">
+        <nav aria-label="Navegação móvel">
+          <ul class="menu-mobile-links">
+            <li><a href="#inicio">Início</a></li>
+            <li><a href="#beneficios">Metodologia</a></li>
+            <li><a href="#planos">Planos</a></li>
+            <li><a href="#depoimentos">Depoimentos</a></li>
+            <li style="margin-top: 8px">
+              <a href="#cadastro" class="btn-primario" style="width: 100%; text-align: center">Matricular-se</a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- CONTEÚDO PRINCIPAL (LANDMARK) -->
+  <main id="conteudo-principal">
+    <!-- HERO SECTION -->
+    <section id="inicio" class="container secao-hero" aria-labelledby="hero-titulo">
+      <div>
+        <div class="hero-especificacoes">
+          <span class="hero-status-dot" aria-hidden="true"></span>
+          <span>MATRÍCULAS ABERTAS / TEMPORADA 2026</span>
+        </div>
+
+        <h1 id="hero-titulo" class="hero-titulo">
+          Engenharia do <span>movimento humano.</span>
+        </h1>
+
+        <p class="hero-texto">
+          Esqueça o modelo tradicional de academia. A Pulse combina biometria
+          de precisão, treinadores de alto rendimento e infraestrutura de
+          nível olímpico.
+        </p>
+
+        <div class="hero-botoes">
+          <a href="#cadastro" class="btn-primario">
+            Iniciar Diagnóstico
+            <i data-lucide="arrow-right" aria-hidden="true"></i>
+          </a>
+          <a href="#planos" class="btn-secundario">Ver Estrutura de Planos</a>
+        </div>
+
+        <div class="hero-metricas">
+          <div>
+            <div class="metrica-num">100%</div>
+            <div class="metrica-label">Garantia de acompanhamento</div>
+          </div>
+          <div>
+            <div class="metrica-num">24/7</div>
+            <div class="metrica-label">Acesso irrestrito</div>
+          </div>
+          <div>
+            <div class="metrica-num">01:01</div>
+            <div class="metrica-label">Proporção aluno/personal</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-quadro-imagem">
+        <img src="img/pulse.png" alt="Atleta em ambiente de alta performance executando treino de força com halteres" />
+        <div class="hero-overlay-card">
+          <div style="
+                font-family: var(--font-display);
+                font-weight: 700;
+                font-size: 0.875rem;
+                margin-bottom: 4px;
+              ">
+            PULSE PERFORMANCE LAB
+          </div>
+          <p style="font-size: 0.8125rem; color: var(--text-muted)">
+            Monitoramento metabólico em tempo real e periodização adaptativa.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SEÇÃO METODOLOGIA / BENEFÍCIOS (BENTO GRID) -->
+    <section id="beneficios" class="container secao" aria-labelledby="titulo-beneficios">
+      <div class="cabecalho-secao-bloco">
+        <div class="tag-secao">[ 01 // METODOLOGIA ]</div>
+        <h2 id="titulo-beneficios" class="titulo-secao">
+          Desenhada para resultados mensuráveis.
+        </h2>
+        <p class="subtitulo-secao">
+          Nossos pilares de treinamento unem ciência do esporte e tecnologia
+          aplicada.
+        </p>
+      </div>
+
+      <div class="grid-bento">
+        <article class="bento-destaque">
+          <div>
+            <div class="bento-num">01 / BIOMETRIA</div>
+            <h3 class="bento-titulo" style="font-size: 1.75rem">
+              Avaliação Biomecânica Computadorizada
+            </h3>
+            <p class="bento-texto" style="font-size: 1.0625rem">
+              Antes de pegar o primeiro peso, mapeamos sua mobilidade,
+              assimetrias musculares e capacidade cardiorrespiratória com
+              sensores cinemáticos.
+            </p>
+          </div>
+          <div style="
+                margin-top: 32px;
+                display: flex;
+                gap: 12px;
+                align-items: center;
+                color: var(--accent-color);
+                font-weight: 700;
+                font-size: 0.875rem;
+              ">
+            <span>TECNOLOGIA PROPRIETÁRIA PULSE SCAN</span>
+            <i data-lucide="chevron-right" aria-hidden="true"></i>
+          </div>
+        </article>
+
+        <article class="bento-item">
+          <div class="bento-num">02 / ACOMPANHAMENTO</div>
+          <h3 class="bento-titulo">Periodização por Metas</h3>
+          <p class="bento-texto">
+            Seu treino evolui semanalmente com base na sua taxa de recuperação
+            e carga suportada.
+          </p>
+        </article>
+
+        <article class="bento-item-terco">
+          <div class="bento-num">03 / EQUIPE</div>
+          <h3 class="bento-titulo">Treinadores Elite</h3>
+          <p class="bento-texto">
+            Profissionais certificados internacionalmente alinhando sua
+            execução técnica em cada sessão.
+          </p>
+        </article>
+
+        <article class="bento-item-terco">
+          <div class="bento-num">04 / INFRAESTRUTURA</div>
+          <h3 class="bento-titulo">Aparelhagem Eletrônica</h3>
+          <p class="bento-texto">
+            Carga pneumática e ajuste digital de resistência para máximo
+            recrutamento muscular.
+          </p>
+        </article>
+
+        <article class="bento-item-terco">
+          <div class="bento-num">05 / RECOVERY</div>
+          <h3 class="bento-titulo">Área de Crioterapia</h3>
+          <p class="bento-texto">
+            Recuperação acelerada com banheiras de gelo e botas de compressão
+            pneumática pós-treino.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <!-- PLANOS -->
+    <section id="planos" class="container secao" aria-labelledby="titulo-planos">
+      <div class="cabecalho-secao-bloco">
+        <div class="tag-secao">[ 02 // ADESÃO ]</div>
+        <h2 id="titulo-planos" class="titulo-secao">
+          Selecione seu nível de acesso.
+        </h2>
+        <p class="subtitulo-secao">
+          Planos transparentes sem taxa de cancelamento oculta ou fidelidade
+          compulsória.
+        </p>
+      </div>
+
+      <div class="grid-planos">
+        <!-- Plano Basic -->
+        <article class="painel-estrutural card-plano">
+          <div>
+            <h3 class="plano-nome">Pulse Basic</h3>
+            <p style="
+                  color: var(--text-muted);
+                  font-size: 0.875rem;
+                  margin-top: 4px;
+                ">
+              Treinamento essencial autônomo
+            </p>
+            <div class="preco-valor">
+              R$ 119<span class="preco-periodo">/mês</span>
+            </div>
+
+            <ul class="lista-recursos">
+              <li>
+                <i data-lucide="check" aria-hidden="true"></i> Acesso total à
+                área de musculação
+              </li>
+              <li>
+                <i data-lucide="check" aria-hidden="true"></i> Horário livre
+                (06h às 22h)
+              </li>
+              <li>
+                <i data-lucide="check" aria-hidden="true"></i> Aplicativo de
+                treino básico
+              </li>
+            </ul>
+          </div>
+          <a href="#cadastro" class="btn-secundario" style="width: 100%">Selecionar Basic</a>
+        </article>
+
+        <!-- Plano Pro (Destacado) -->
+        <article class="painel-estrutural card-plano destacado">
+          <div class="tag-plano-destaque">Recomendado</div>
+          <div>
+            <h3 class="plano-nome">Pulse Pro</h3>
+            <p style="
+                  color: var(--text-muted);
+                  font-size: 0.875rem;
+                  margin-top: 4px;
+                ">
+              Performance completa e acompanhamento
+            </p>
+            <div class="preco-valor">
+              R$ 189<span class="preco-periodo">/mês</span>
+            </div>
+
+            <ul class="lista-recursos">
+              <li>
+                <i data-lucide="check" aria-hidden="true"></i> Acesso
+                irrestrito 24/7
+              </li>
+              <li>
+                <i data-lucide="check" aria-hidden="true"></i> App Pulse Pro +
+                Biometria Digital
+              </li>
+              <li>
+                <i data-lucide="check" aria-hidden="true"></i> Aulas coletivas
+                de alta intensidade
+              </li>
+              <li>
+                <i data-lucide="check" aria-hidden="true"></i> 1 Passe mensal
+                para acompanhante
+              </li>
+            </ul>
+          </div>
+          <a href="#cadastro" class="btn-primario" style="width: 100%">Garantir Acesso Pro</a>
+        </article>
+
+        <!-- Plano Elite -->
+        <article class="painel-estrutural card-plano">
+          <div>
+            <h3 class="plano-nome">Pulse Elite</h3>
+            <p style="
+                  color: var(--text-muted);
+                  font-size: 0.875rem;
+                  margin-top: 4px;
+                ">
+              Personalização máxima individual
+            </p>
+            <div class="preco-valor">
+              R$ 299<span class="preco-periodo">/mês</span>
+            </div>
+
+            <ul class="lista-recursos">
+              <li>
+                <i data-lucide="check" aria-hidden="true"></i> Todos os
+                benefícios do plano Pro
+              </li>
+              <li>
+                <i data-lucide="check" aria-hidden="true"></i> Avaliação
+                biométrica mensal dedicada
+              </li>
+              <li>
+                <i data-lucide="check" aria-hidden="true"></i> Armário
+                privativo + Serviço de toalhas
+              </li>
+              <li>
+                <i data-lucide="check" aria-hidden="true"></i> Acesso à Suíte
+                de Crioterapia
+              </li>
+            </ul>
+          </div>
+          <a href="#cadastro" class="btn-secundario" style="width: 100%">Selecionar Elite</a>
+        </article>
+      </div>
+    </section>
+
+    <!-- DEPOIMENTOS -->
+    <section id="depoimentos" class="container secao" aria-labelledby="titulo-depoimentos">
+      <div class="cabecalho-secao-bloco">
+        <div class="tag-secao">[ 03 // DEPOIMENTOS ]</div>
+        <h2 id="titulo-depoimentos" class="titulo-secao">
+          Resultados auditados por alunos.
+        </h2>
+        <p class="subtitulo-secao">
+          Histórias reais de pessoas que transformaram sua rotina e
+          performance.
+        </p>
+      </div>
+
+      <div class="grid-depoimentos">
+        <article class="painel-estrutural">
+          <div class="depoimento-aspas" aria-hidden="true">“</div>
+          <blockquote class="depoimento-texto">
+            A precisão das avaliações biométricas mudou completamente meu
+            treino. Eliminei dores no joelho e aumentei minha carga útil em
+            40%.
+          </blockquote>
+          <div class="usuario-info">
+            <img src="img/02.png" class="usuario-foto" alt="Foto de perfil de Camila Rocha" />
+            <div>
+              <strong style="display: block; font-size: 0.9375rem">Camila Rocha</strong>
+              <span style="font-size: 0.8125rem; color: var(--text-muted)">Membro há 12 meses</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="painel-estrutural">
+          <div class="depoimento-aspas" aria-hidden="true">“</div>
+          <blockquote class="depoimento-texto">
+            O ambiente não parece uma academia barulhenta comum. É focado,
+            organizado e os instrutores corrigem cada detalhe de postura.
+          </blockquote>
+          <div class="usuario-info">
+            <img src="img/03.jpeg" class="usuario-foto" alt="Foto de perfil de Lucas Andrade" />
+            <div>
+              <strong style="display: block; font-size: 0.9375rem">Lucas Andrade</strong>
+              <span style="font-size: 0.8125rem; color: var(--text-muted)">Membro há 6 meses</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="painel-estrutural">
+          <div class="depoimento-aspas" aria-hidden="true">“</div>
+          <blockquote class="depoimento-texto">
+            A flexibilidade 24/7 do plano Pro permite que eu treine às 05h da
+            manhã com a mesma estrutura de ponta do horário de pico.
+          </blockquote>
+          <div class="usuario-info">
+            <img src="img/04.jpg" class="usuario-foto" alt="Foto de perfil de Mariana Silva" />
+            <div>
+              <strong style="display: block; font-size: 0.9375rem">Mariana Silva</strong>
+              <span style="font-size: 0.8125rem; color: var(--text-muted)">Membro há 8 meses</span>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- FORMULÁRIO -->
+    <section id="cadastro" class="container secao" aria-labelledby="titulo-cadastro" style="border-bottom: none">
+      <div class="secao-cadastro-layout">
+        <div>
+          <div class="tag-secao">[ 04 // CADASTRO ]</div>
+          <h2 id="titulo-cadastro" class="titulo-secao">
+            Inicie seu passe experimental de 3 dias.
+          </h2>
+          <p class="subtitulo-secao">
+            Experimente nossa estrutura sem compromisso financeiro. Preencha
+            seus dados para liberar sua credencial digital.
+          </p>
+
+          <div style="
+                margin-top: 32px;
+                display: flex;
+                flex-direction: column;
+                gap: 16px;
+              ">
+            <div style="display: flex; align-items: center; gap: 12px">
+              <i data-lucide="shield-check" style="color: var(--accent-color)" aria-hidden="true"></i>
+              <span style="font-size: 0.9375rem; color: var(--text-secondary)">Sem necessidade de cartão de crédito no
+                cadastro</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 12px">
+              <i data-lucide="clock" style="color: var(--accent-color)" aria-hidden="true"></i>
+              <span style="font-size: 0.9375rem; color: var(--text-secondary)">Ativação imediata no seu
+                smartphone</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="painel-estrutural">
+          <form id="form-cadastro" novalidate>
+            <div class="grupo-campo">
+              <label for="nome">Nome Completo
+                <span class="campo-obrigatorio" aria-hidden="true">*</span></label>
+              <input type="text" id="nome" name="nome" class="campo-texto" placeholder="Seu nome legível" required
+                autocomplete="name" />
+            </div>
+
+            <div class="grupo-campo">
+              <label for="email">E-mail Corporativo ou Pessoal
+                <span class="campo-obrigatorio" aria-hidden="true">*</span></label>
+              <input type="email" id="email" name="email" class="campo-texto" placeholder="seu@email.com" required
+                autocomplete="email" />
+            </div>
+
+            <div class="grupo-campo">
+              <label for="objetivo">Objetivo Principal
+                <span class="campo-obrigatorio" aria-hidden="true">*</span></label>
+              <select id="objetivo" name="objetivo" class="campo-select" required>
+                <option value="" disabled selected>
+                  Selecione sua meta primária
+                </option>
+                <option value="hipertrofia">
+                  Ganho de Massa / Hipertrofia
+                </option>
+                <option value="emagrecimento">
+                  Recomposição / Emagrecimento
+                </option>
+                <option value="condicionamento">
+                  Performance Cardiorrespiratória
+                </option>
+              </select>
+            </div>
+
+            <button type="submit" class="btn-primario" style="width: 100%; margin-top: 8px">
+              Resgatar Credencial Digital
+            </button>
+
+            <div id="mensagem-sucesso" class="mensagem-sucesso" role="status" aria-live="polite"></div>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- DOCK FLUTUANTE DE UTILITÁRIOS -->
+  <div class="dock-utilitarios">
+    <!-- BOTÃO VOLTAR AO TOPO -->
+    <button id="btn-voltar-topo" class="btn-dock btn-voltar-topo" aria-label="Voltar ao topo da página"
+      title="Voltar ao topo">
+      <i data-lucide="arrow-up" aria-hidden="true"></i>
+      <span style="font-size: 0.75rem; text-transform: uppercase">Topo</span>
+    </button>
+
+    <!-- BOTÃO PAINEL ACESSIBILIDADE -->
+    <button id="btn-acessibilidade-trigger" class="btn-dock" aria-label="Abrir painel de acessibilidade"
+      aria-expanded="false" aria-controls="painel-acessibilidade">
+      <i data-lucide="accessibility" aria-hidden="true"></i>
+      <span style="font-size: 0.75rem; text-transform: uppercase">Acessibilidade</span>
+    </button>
+  </div>
+
+  <!-- PAINEL DE ACESSIBILIDADE MODAL (ROLE DIALOG & FOCUS TRAP) -->
+  <div id="painel-acessibilidade" class="painel-acessibilidade" role="dialog" aria-modal="true"
+    aria-labelledby="titulo-painel" aria-hidden="true">
+    <div class="painel-cabecalho">
+      <h2 id="titulo-painel" class="painel-titulo">
+        <i data-lucide="settings" aria-hidden="true"></i>
+        Acessibilidade
+      </h2>
+      <button id="btn-fechar-painel" class="btn-fechar-painel" aria-label="Fechar painel de acessibilidade">
+        ✕
+      </button>
+    </div>
+
+    <!-- Modo de Cor -->
+    <div>
+      <div class="painel-secao-titulo">Modo de Exibição</div>
+      <div class="grid-botoes-acessibilidade">
+        <button id="btn-tema-dark" class="btn-opcao-acessibilidade" aria-pressed="false">
+          🌙 Escuro
+        </button>
+        <button id="btn-tema-light" class="btn-opcao-acessibilidade" aria-pressed="false">
+          ☀️ Claro
+        </button>
+      </div>
+      <button id="btn-alto-contraste" class="btn-opcao-acessibilidade" style="width: 100%; margin-top: 8px"
+        aria-pressed="false">
+        ◼️ Alto Contraste
+      </button>
+    </div>
+
+    <!-- Tamanho da Fonte -->
+    <div>
+      <div class="painel-secao-titulo">Escala Tipográfica</div>
+      <div class="grid-botoes-acessibilidade" style="grid-template-columns: repeat(3, 1fr)">
+        <button id="btn-fonte-diminuir" class="btn-opcao-acessibilidade" aria-label="Diminuir tamanho da fonte">
+          A−
+        </button>
+        <button id="btn-fonte-padrao" class="btn-opcao-acessibilidade" aria-label="Tamanho padrão da fonte">
+          A
+        </button>
+        <button id="btn-fonte-aumentar" class="btn-opcao-acessibilidade" aria-label="Aumentar tamanho da fonte">
+          A+
+        </button>
+      </div>
+    </div>
+
+    <!-- Preferências Visuais -->
+    <div>
+      <div class="painel-secao-titulo">Navegação Visível</div>
+      <div class="grid-botoes-acessibilidade">
+        <button id="btn-foco-destacado" class="btn-opcao-acessibilidade" aria-pressed="false">
+          ⌨️ Foco Rígido
+        </button>
+        <button id="btn-destacar-links" class="btn-opcao-acessibilidade" aria-pressed="false">
+          🔗 Grifar Links
+        </button>
+      </div>
+      <button id="btn-reduzir-animacoes" class="btn-opcao-acessibilidade" style="width: 100%; margin-top: 8px"
+        aria-pressed="false">
+        🎞️ Reduzir Animações
+      </button>
+    </div>
+
+    <!-- Reset -->
+    <button id="btn-reset-acessibilidade" class="btn-reset-acessibilidade">
+      🔄 Restaurar Padrões
+    </button>
+  </div>
+
+  <!-- RODAPÉ -->
+  <footer class="rodape">
+    <div class="container rodape-conteudo">
+      <div class="logo" style="font-size: 1.25rem">
+        <span class="logo-indicador" aria-hidden="true"></span>
+        PULSE ATHLETIC CLUB
+      </div>
+      <p>
+        © 2026 Pulse Fitness Technologies. Acessibilidade e performance
+        integradas.
+      </p>
+    </div>
+  </footer>
+
+  <!-- JAVASCRIPT CORRIGIDO & MELHORADO -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // Inicialização dos Ícones Lucide
+      lucide.createIcons();
+
+      // ===== 1. GERENCIAMENTO DO MENU MOBILE E FOCO =====
+      const btnHamburguer = document.getElementById("btn-hamburguer");
+      const menuMobile = document.getElementById("menu-mobile");
+      const primeiroLinkMobile = menuMobile.querySelector("a");
+
+      function alternarMenuMobile(abrir) {
+        const estaAberto =
+          abrir !== undefined
+            ? abrir
+            : btnHamburguer.getAttribute("aria-expanded") === "false";
+
+        btnHamburguer.setAttribute("aria-expanded", estaAberto);
+        btnHamburguer.setAttribute(
+          "aria-label",
+          estaAberto ? "Fechar menu de navegação" : "Abrir menu de navegação",
+        );
+        menuMobile.setAttribute("aria-hidden", !estaAberto);
+        menuMobile.classList.toggle("ativo", estaAberto);
+
+        if (estaAberto) {
+          // Direciona foco para o primeiro item
+          if (primeiroLinkMobile) primeiroLinkMobile.focus();
+        } else {
+          // Restaura foco para o botão de origem
+          btnHamburguer.focus();
+        }
+      }
+
+      btnHamburguer.addEventListener("click", () => alternarMenuMobile());
+
+      const linksMobile = menuMobile.querySelectorAll("a");
+      linksMobile.forEach((link) => {
+        link.addEventListener("click", () => alternarMenuMobile(false));
+      });
+
+      // ===== 2. BOTÃO VOLTAR AO TOPO =====
+      const btnVoltarTopo = document.getElementById("btn-voltar-topo");
+
+      function checarScrollTopo() {
+        if (window.scrollY > 350) {
+          btnVoltarTopo.classList.add("visivel");
+        } else {
+          btnVoltarTopo.classList.remove("visivel");
+        }
+      }
+
+      window.addEventListener("scroll", checarScrollTopo, { passive: true });
+
+      btnVoltarTopo.addEventListener("click", () => {
+        const reduceMotion =
+          document.body.classList.contains("reduced-motion") ||
+          window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+        window.scrollTo({
+          top: 0,
+          behavior: reduceMotion ? "auto" : "smooth",
+        });
+      });
+
+      // ===== 3. PAINEL DE ACESSIBILIDADE & FOCUS TRAP REAL =====
+      const btnTrigger = document.getElementById(
+        "btn-acessibilidade-trigger",
+      );
+      const painel = document.getElementById("painel-acessibilidade");
+      const btnFechar = document.getElementById("btn-fechar-painel");
+
+      function obterElementosFocaveis(container) {
+        return Array.from(
+          container.querySelectorAll(
+            'button:not([disabled]), [href]:not([tabindex="-1"]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+          ),
+        );
+      }
+
+      function alternarPainel(abrir) {
+        const estaAberto =
+          abrir !== undefined
+            ? abrir
+            : btnTrigger.getAttribute("aria-expanded") === "false";
+
+        btnTrigger.setAttribute("aria-expanded", estaAberto);
+        painel.setAttribute("aria-hidden", !estaAberto);
+        painel.classList.toggle("aberto", estaAberto);
+
+        if (estaAberto) {
+          const focaveis = obterElementosFocaveis(painel);
+          if (focaveis.length > 0) {
+            focaveis[0].focus(); // Foco no primeiro elemento (botão fechar)
+          }
+        } else {
+          btnTrigger.focus(); // Devolve o foco ao botão que abriu
+        }
+      }
+
+      btnTrigger.addEventListener("click", () => alternarPainel());
+      btnFechar.addEventListener("click", () => alternarPainel(false));
+
+      // Implementação do Focus Trap no Modal
+      painel.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          alternarPainel(false);
+          return;
+        }
+
+        if (e.key === "Tab") {
+          const focaveis = obterElementosFocaveis(painel);
+          if (focaveis.length === 0) return;
+
+          const primeiro = focaveis[0];
+          const ultimo = focaveis[focaveis.length - 1];
+
+          if (e.shiftKey) {
+            if (document.activeElement === primeiro) {
+              e.preventDefault();
+              ultimo.focus();
+            }
+          } else {
+            if (document.activeElement === ultimo) {
+              e.preventDefault();
+              primeiro.focus();
+            }
+          }
+        }
+      });
+
+      // Tecla ESC global para fechar menus ou painel
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          if (painel.classList.contains("aberto")) {
+            alternarPainel(false);
+          } else if (btnHamburguer.getAttribute("aria-expanded") === "true") {
+            alternarMenuMobile(false);
+          }
+        }
+      });
+
+      // ===== 4. ESTADO DE ACESSIBILIDADE E PERSISTÊNCIA =====
+      const acessibilidadeState = {
+        theme: localStorage.getItem("pulse_theme") || "dark",
+        fontSizeLevel:
+          parseInt(localStorage.getItem("pulse_font_level")) || 2,
+        focusHighlight:
+          localStorage.getItem("pulse_focus_highlight") === "true",
+        linksHighlight:
+          localStorage.getItem("pulse_links_highlight") === "true",
+        reduceMotion: localStorage.getItem("pulse_reduce_motion") === "true",
+      };
+
+      const fontScales = { 1: "90%", 2: "100%", 3: "110%", 4: "120%" };
+
+      const btnDark = document.getElementById("btn-tema-dark");
+      const btnLight = document.getElementById("btn-tema-light");
+      const btnContraste = document.getElementById("btn-alto-contraste");
+      const btnFonteDiminuir = document.getElementById("btn-fonte-diminuir");
+      const btnFontePadrao = document.getElementById("btn-fonte-padrao");
+      const btnFonteAumentar = document.getElementById("btn-fonte-aumentar");
+      const btnFoco = document.getElementById("btn-foco-destacado");
+      const btnLinks = document.getElementById("btn-destacar-links");
+      const btnAnimacoes = document.getElementById("btn-reduzir-animacoes");
+      const btnReset = document.getElementById("btn-reset-acessibilidade");
+
+      function aplicarConfiguracoes() {
+        // Temas
+        document.body.classList.remove("theme-light", "high-contrast");
+        btnDark.setAttribute("aria-pressed", "false");
+        btnLight.setAttribute("aria-pressed", "false");
+        btnContraste.setAttribute("aria-pressed", "false");
+
+        if (acessibilidadeState.theme === "light") {
+          document.body.classList.add("theme-light");
+          btnLight.setAttribute("aria-pressed", "true");
+        } else if (acessibilidadeState.theme === "high-contrast") {
+          document.body.classList.add("high-contrast");
+          btnContraste.setAttribute("aria-pressed", "true");
+        } else {
+          btnDark.setAttribute("aria-pressed", "true");
+        }
+
+        // Fonte
+        document.documentElement.style.setProperty(
+          "--font-scale",
+          fontScales[acessibilidadeState.fontSizeLevel],
+        );
+        btnFonteDiminuir.setAttribute(
+          "aria-pressed",
+          acessibilidadeState.fontSizeLevel === 1 ? "true" : "false",
+        );
+        btnFontePadrao.setAttribute(
+          "aria-pressed",
+          acessibilidadeState.fontSizeLevel === 2 ? "true" : "false",
+        );
+        btnFonteAumentar.setAttribute(
+          "aria-pressed",
+          acessibilidadeState.fontSizeLevel >= 3 ? "true" : "false",
+        );
+
+        // Foco
+        document.body.classList.toggle(
+          "focus-highlighted",
+          acessibilidadeState.focusHighlight,
+        );
+        btnFoco.setAttribute(
+          "aria-pressed",
+          acessibilidadeState.focusHighlight ? "true" : "false",
+        );
+
+        // Links
+        document.body.classList.toggle(
+          "links-highlighted",
+          acessibilidadeState.linksHighlight,
+        );
+        btnLinks.setAttribute(
+          "aria-pressed",
+          acessibilidadeState.linksHighlight ? "true" : "false",
+        );
+
+        // Animações
+        document.body.classList.toggle(
+          "reduced-motion",
+          acessibilidadeState.reduceMotion,
+        );
+        btnAnimacoes.setAttribute(
+          "aria-pressed",
+          acessibilidadeState.reduceMotion ? "true" : "false",
+        );
+
+        // Persistência
+        localStorage.setItem("pulse_theme", acessibilidadeState.theme);
+        localStorage.setItem(
+          "pulse_font_level",
+          acessibilidadeState.fontSizeLevel,
+        );
+        localStorage.setItem(
+          "pulse_focus_highlight",
+          acessibilidadeState.focusHighlight,
+        );
+        localStorage.setItem(
+          "pulse_links_highlight",
+          acessibilidadeState.linksHighlight,
+        );
+        localStorage.setItem(
+          "pulse_reduce_motion",
+          acessibilidadeState.reduceMotion,
+        );
+      }
+
+      // Listeners de Acessibilidade
+      btnDark.addEventListener("click", () => {
+        acessibilidadeState.theme = "dark";
+        aplicarConfiguracoes();
+      });
+      btnLight.addEventListener("click", () => {
+        acessibilidadeState.theme = "light";
+        aplicarConfiguracoes();
+      });
+      btnContraste.addEventListener("click", () => {
+        acessibilidadeState.theme =
+          acessibilidadeState.theme === "high-contrast"
+            ? "dark"
+            : "high-contrast";
+        aplicarConfiguracoes();
+      });
+
+      btnFonteDiminuir.addEventListener("click", () => {
+        if (acessibilidadeState.fontSizeLevel > 1) {
+          acessibilidadeState.fontSizeLevel--;
+          aplicarConfiguracoes();
+        }
+      });
+      btnFontePadrao.addEventListener("click", () => {
+        acessibilidadeState.fontSizeLevel = 2;
+        aplicarConfiguracoes();
+      });
+      btnFonteAumentar.addEventListener("click", () => {
+        if (acessibilidadeState.fontSizeLevel < 4) {
+          acessibilidadeState.fontSizeLevel++;
+          aplicarConfiguracoes();
+        }
+      });
+
+      btnFoco.addEventListener("click", () => {
+        acessibilidadeState.focusHighlight =
+          !acessibilidadeState.focusHighlight;
+        aplicarConfiguracoes();
+      });
+      btnLinks.addEventListener("click", () => {
+        acessibilidadeState.linksHighlight =
+          !acessibilidadeState.linksHighlight;
+        aplicarConfiguracoes();
+      });
+      btnAnimacoes.addEventListener("click", () => {
+        acessibilidadeState.reduceMotion = !acessibilidadeState.reduceMotion;
+        aplicarConfiguracoes();
+      });
+
+      btnReset.addEventListener("click", () => {
+        acessibilidadeState.theme = "dark";
+        acessibilidadeState.fontSizeLevel = 2;
+        acessibilidadeState.focusHighlight = false;
+        acessibilidadeState.linksHighlight = false;
+        acessibilidadeState.reduceMotion = false;
+        aplicarConfiguracoes();
+      });
+
+      // ===== 5. VALIDAÇÃO DO FORMULÁRIO =====
+      const form = document.getElementById("form-cadastro");
+      const msgSucesso = document.getElementById("mensagem-sucesso");
+
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        if (form.checkValidity()) {
+          msgSucesso.textContent =
+            "Credencial experimental gerada com sucesso! Verifique sua caixa de entrada.";
+          msgSucesso.style.display = "block";
+          form.reset();
+          msgSucesso.focus();
+        } else {
+          form.reportValidity();
+        }
+      });
+
+      // Inicializar tudo
+      aplicarConfiguracoes();
+      checarScrollTopo();
+    });
+  </script>
+</body>
+
+</html>
