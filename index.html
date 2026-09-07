@@ -2,17 +2,29 @@
 <html lang="pt-BR">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pulse — High Performance Athletic Club</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pulse — High Performance Athletic Club</title>
 
-  <!-- Tipografia & Ícones -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap"
-    rel="stylesheet" />
-  <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- SEO & Indexação -->
+    <meta name="description" content="Eleve seu treino na Pulse. O clube de alta performance definitivo com infraestrutura premium, atletas de elite e programas personalizados." />
+    <meta name="keywords" content="academia de alta performance, pulse athletic club, treino de elite, bodybuilding, crossfit, preparação física" />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="Pulse" />
+
+    <!-- Tipografia & Ícones -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
+    
+    <!-- Scripts (Lucide Icons) -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        // Inicializa os ícones do Lucide assim que o DOM estiver pronto
+        document.addEventListener("DOMContentLoaded", () => {
+            lucide.createIcons();
+        });
+    </script>
 
   <style>
     /* ===== 1. DESIGN SYSTEM & VARIÁVEIS CSS ===== */
@@ -39,6 +51,7 @@
 
       --focus-outline-width: 3px;
       --font-scale: 100%;
+      --content-gutter: clamp(16px, 3.2vw, 48px);
 
       /* Fontes */
       --font-main: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
@@ -128,9 +141,10 @@
     }
 
     .container {
+      width: 100%;
       max-width: 1280px;
       margin: 0 auto;
-      padding: 0 24px;
+      padding-inline: var(--content-gutter);
     }
 
     /* FOCO VISÍVEL PADRONIZADO */
@@ -383,7 +397,7 @@
 
     /* ===== 6. HERO SECTION REFORMULADA ===== */
     .secao-hero {
-      padding: 80px 0 100px 0;
+      padding-block: 80px 100px;
       display: grid;
       grid-template-columns: 1.1fr 0.9fr;
       gap: 48px;
@@ -489,7 +503,7 @@
 
     /* ===== 7. SEÇÃO BENEFÍCIOS (BENTO GRID) ===== */
     .secao {
-      padding: 100px 0;
+      padding-block: 100px;
       border-bottom: 1px solid var(--border-color);
     }
 
@@ -497,6 +511,16 @@
       display: grid;
       grid-template-columns: repeat(12, 1fr);
       gap: 24px;
+    }
+
+    .grid-bento>* {
+      min-width: 0;
+    }
+
+    .grid-planos>*,
+    .grid-depoimentos>*,
+    .secao-cadastro-layout>* {
+      min-width: 0;
     }
 
     .bento-destaque {
@@ -749,7 +773,7 @@
       color: var(--accent-color);
       transform: translateY(-2px);
     }
-    
+
 
     /* Botão Voltar ao Topo */
     .btn-voltar-topo {
@@ -896,6 +920,10 @@
 
     /* ===== 13. RESPONSIVIDADE ADAPTATIVA ===== */
     @media (max-width: 1024px) {
+      .hero-overlay-card {
+        left: 0;
+      }
+
       .secao-hero {
         grid-template-columns: 1fr;
         gap: 40px;
@@ -926,6 +954,10 @@
     }
 
     @media (max-width: 768px) {
+
+      .container {
+        padding-inline: clamp(16px, 5vw, 24px);
+      }
 
       .nav-desktop,
       .btn-header-desktop {
@@ -1676,7 +1708,7 @@
       const acessibilidadeState = {
         theme: localStorage.getItem("pulse_theme") || "dark",
         fontSizeLevel:
-          parseInt(localStorage.getItem("pulse_font_level")) || 2,
+          parseInt(localStorage.getItem("pulse_font_level")) || 3,
         focusHighlight:
           localStorage.getItem("pulse_focus_highlight") === "true",
         linksHighlight:
@@ -1684,7 +1716,7 @@
         reduceMotion: localStorage.getItem("pulse_reduce_motion") === "true",
       };
 
-      const fontScales = { 1: "90%", 2: "100%", 3: "110%", 4: "120%" };
+      const fontScales = ["50%", "65%", "80%", "100%", "125%", "150%", "175%", "200%"];
 
       const btnDark = document.getElementById("btn-tema-dark");
       const btnLight = document.getElementById("btn-tema-light");
@@ -1721,11 +1753,11 @@
         );
         btnFonteDiminuir.setAttribute(
           "aria-pressed",
-          acessibilidadeState.fontSizeLevel === 1 ? "true" : "false",
+          acessibilidadeState.fontSizeLevel === 3 ? "true" : "false",
         );
         btnFontePadrao.setAttribute(
           "aria-pressed",
-          acessibilidadeState.fontSizeLevel === 2 ? "true" : "false",
+          acessibilidadeState.fontSizeLevel === 3 ? "true" : "false",
         );
         btnFonteAumentar.setAttribute(
           "aria-pressed",
@@ -1800,17 +1832,17 @@
       });
 
       btnFonteDiminuir.addEventListener("click", () => {
-        if (acessibilidadeState.fontSizeLevel > 1) {
+        if (acessibilidadeState.fontSizeLevel > 0) {
           acessibilidadeState.fontSizeLevel--;
           aplicarConfiguracoes();
         }
       });
       btnFontePadrao.addEventListener("click", () => {
-        acessibilidadeState.fontSizeLevel = 2;
+        acessibilidadeState.fontSizeLevel = 3;
         aplicarConfiguracoes();
       });
       btnFonteAumentar.addEventListener("click", () => {
-        if (acessibilidadeState.fontSizeLevel < 4) {
+        if (acessibilidadeState.fontSizeLevel < fontScales.length - 1) {
           acessibilidadeState.fontSizeLevel++;
           aplicarConfiguracoes();
         }
@@ -1833,7 +1865,7 @@
 
       btnReset.addEventListener("click", () => {
         acessibilidadeState.theme = "dark";
-        acessibilidadeState.fontSizeLevel = 2;
+        acessibilidadeState.fontSizeLevel = 3;
         acessibilidadeState.focusHighlight = false;
         acessibilidadeState.linksHighlight = false;
         acessibilidadeState.reduceMotion = false;
