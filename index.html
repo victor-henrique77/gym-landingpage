@@ -51,6 +51,17 @@
       --font-scale: 100%;
       --content-gutter: clamp(16px, 3.2vw, 48px);
 
+      /* ===== FLOAT DESIGN: TOKENS DE ELEVAÇÃO ===== */
+      /* Sistema de profundidade (inspirado no Material Design): cards de */
+      /* planos e depoimentos usam sombra difusa para parecer que flutuam */
+      /* sobre o fundo, nunca "grudados" nele. Quanto maior a elevação, mais */
+      /* alta e mais suave a sombra projetada. */
+      --sombra-repouso: 0 1px 2px rgba(0, 0, 0, 0.4), 0 18px 40px -18px rgba(0, 0, 0, 0.65);
+      --sombra-hover: 0 2px 6px rgba(0, 0, 0, 0.45), 0 30px 54px -18px rgba(204, 255, 0, 0.14), 0 26px 50px -16px rgba(0, 0, 0, 0.7);
+      --sombra-flutuante: 0 34px 64px -22px rgba(0, 0, 0, 0.75);
+      --distancia-flutuacao: 8px;
+      --accent-glow-rgb: 204, 255, 0;
+
       /* Fontes */
       --font-main: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
       --font-display: "Space Grotesk", sans-serif;
@@ -75,6 +86,12 @@
       --btn-sec-bg: #f1f5f9;
       --btn-sec-hover: #e2e8f0;
       --focus-outline-color: #15803d;
+
+      /* Sombras mais suaves e neutras para o fundo claro */
+      --sombra-repouso: 0 1px 2px rgba(15, 23, 42, 0.06), 0 18px 40px -20px rgba(15, 23, 42, 0.18);
+      --sombra-hover: 0 2px 6px rgba(15, 23, 42, 0.08), 0 30px 54px -18px rgba(21, 128, 61, 0.16), 0 26px 44px -18px rgba(15, 23, 42, 0.22);
+      --sombra-flutuante: 0 34px 64px -24px rgba(15, 23, 42, 0.25);
+      --accent-glow-rgb: 21, 128, 61;
     }
 
     /* Modo Alto Contraste */
@@ -93,6 +110,12 @@
       --btn-sec-hover: #1a1a1a !important;
       --focus-outline-color: #ffff00 !important;
       --focus-outline-width: 4px !important;
+
+      /* Sombra removida: alto contraste depende só de bordas sólidas */
+      --sombra-repouso: none !important;
+      --sombra-hover: none !important;
+      --sombra-flutuante: none !important;
+      --accent-glow-rgb: 255, 255, 0;
     }
 
     /* ===== 2. RESETS E BASE ===== */
@@ -215,7 +238,12 @@
     }
 
     /* ===== 4. COMPONENTES REFORMULADOS ===== */
+    /* Botões — MATERIAL DESIGN: elevação (box-shadow) sobe no hover e o botão */
+    /* "afunda" (scale) no clique, imitando o feedback físico de uma superfície */
+    /* pressionada. position:relative + overflow:hidden dão suporte ao ripple. */
     .btn-primario {
+      position: relative;
+      overflow: hidden;
       background-color: var(--accent-color);
       color: var(--accent-text);
       padding: 14px 28px;
@@ -231,17 +259,27 @@
       align-items: center;
       justify-content: center;
       gap: 10px;
+      box-shadow: 0 2px 8px -2px rgba(var(--accent-glow-rgb), 0.35);
       transition:
         background-color 0.2s ease,
-        transform 0.2s ease;
+        transform 0.15s ease,
+        box-shadow 0.2s ease;
     }
 
     .btn-primario:hover {
       transform: translateY(-2px);
       filter: brightness(1.1);
+      box-shadow: 0 10px 24px -6px rgba(var(--accent-glow-rgb), 0.5);
+    }
+
+    .btn-primario:active {
+      transform: translateY(0) scale(0.97);
+      box-shadow: 0 2px 8px -2px rgba(var(--accent-glow-rgb), 0.35);
     }
 
     .btn-secundario {
+      position: relative;
+      overflow: hidden;
       background-color: var(--btn-sec-bg);
       color: var(--text-primary);
       padding: 14px 28px;
@@ -258,28 +296,87 @@
       transition:
         background-color 0.2s ease,
         border-color 0.2s ease,
-        transform 0.2s ease;
+        transform 0.15s ease,
+        box-shadow 0.2s ease;
     }
 
     .btn-secundario:hover {
       background-color: var(--btn-sec-hover);
       border-color: var(--border-hover);
       transform: translateY(-2px);
+      box-shadow: 0 10px 24px -8px rgba(0, 0, 0, 0.4);
     }
 
-    /* Painel Estrutural Modular */
+    .btn-secundario:active {
+      transform: translateY(0) scale(0.97);
+    }
+
+    /* Efeito ripple (Material Design) acionado via JS no clique dos botões */
+    .efeito-ripple {
+      position: absolute;
+      border-radius: 50%;
+      transform: scale(0);
+      background-color: currentColor;
+      opacity: 0.3;
+      pointer-events: none;
+      animation: expandir-ripple 0.6s ease-out;
+    }
+
+    @keyframes expandir-ripple {
+      to {
+        transform: scale(2.6);
+        opacity: 0;
+      }
+    }
+
+    /* ===== FLOAT DESIGN: MOVIMENTO IDLE SUTIL ===== */
+    /* Um leve balanço vertical contínuo (poucos pixels, bem lento) sugere que o */
+    /* card não está preso ao layout — ele "paira". Cada card tem um atraso */
+    /* diferente (delay) para que o movimento pareça orgânico, não sincronizado. */
+    /* Usamos a propriedade independente "translate" (não "transform") de propósito: */
+    /* assim o balanço idle nunca compete com o translateY aplicado no :hover, */
+    /* que continua usando "transform" — as duas se combinam sem conflito. */
+    @keyframes flutuar-suave {
+      0% {
+        translate: 0 0;
+      }
+      50% {
+        translate: 0 -6px;
+      }
+      100% {
+        translate: 0 0;
+      }
+    }
+
+    .flutuante {
+      animation: flutuar-suave 6s ease-in-out infinite;
+    }
+
+    /* O hover sempre vence a animação idle (evita conflito de transform) */
+    .flutuante:hover {
+      animation-play-state: paused;
+    }
+
+    /* Painel Estrutural Modular — FLOAT DESIGN */
+    /* Sombra difusa desloca o card visualmente do fundo (efeito "flutuante"). */
+    /* No hover o card sobe (translateY) e a sombra se espalha ainda mais, */
+    /* reforçando a hierarquia (Material Design: elevação = importância). */
     .painel-estrutural {
       background-color: var(--bg-card);
       border: 1px solid var(--border-color);
       border-radius: 8px;
       padding: 32px;
+      box-shadow: var(--sombra-repouso);
       transition:
         border-color 0.25s ease,
-        transform 0.25s ease;
+        transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+        box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1);
     }
 
     .painel-estrutural:hover {
       border-color: var(--border-hover);
+      transform: translateY(calc(var(--distancia-flutuacao) * -1));
+      box-shadow: var(--sombra-hover);
     }
 
     /* ===== 5. CABEÇALHO & NAVEGAÇÃO ===== */
@@ -486,8 +583,11 @@
       border-radius: 8px;
       border: 1px solid var(--border-color);
       display: block;
+      box-shadow: var(--sombra-repouso);
     }
 
+    /* O card sobreposto é o exemplo mais literal de Float Design da página: */
+    /* ele "sai" da imagem e paira sobre o fundo com sombra própria. */
     .hero-overlay-card {
       position: absolute;
       bottom: -24px;
@@ -497,6 +597,7 @@
       padding: 20px 24px;
       border-radius: 6px;
       max-width: 280px;
+      box-shadow: var(--sombra-flutuante);
     }
 
     /* ===== 7. SEÇÃO BENEFÍCIOS (BENTO GRID) ===== */
@@ -521,11 +622,33 @@
       min-width: 0;
     }
 
-    .bento-destaque {
-      grid-column: span 7;
+    .bento-destaque,
+    .bento-item,
+    .bento-item-terco {
       background-color: var(--bg-card);
       border: 1px solid var(--border-color);
       border-radius: 8px;
+      box-shadow: var(--sombra-repouso);
+      transition:
+        border-color 0.25s ease,
+        transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+        box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .bento-destaque:hover,
+    .bento-item:hover,
+    .bento-item-terco:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-4px);
+      box-shadow: var(--sombra-hover);
+    }
+
+    .bento-destaque:hover .indicador-tecnologia i {
+      transform: translateX(4px);
+    }
+
+    .bento-destaque {
+      grid-column: span 7;
       padding: 40px;
       display: flex;
       flex-direction: column;
@@ -534,17 +657,11 @@
 
     .bento-item {
       grid-column: span 5;
-      background-color: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
       padding: 32px;
     }
 
     .bento-item-terco {
       grid-column: span 4;
-      background-color: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
       padding: 32px;
     }
 
@@ -576,6 +693,19 @@
       align-items: stretch;
     }
 
+    /* Atraso diferente por card: a flutuação não fica sincronizada */
+    .grid-planos .flutuante:nth-child(1) {
+      animation-delay: 0s;
+    }
+
+    .grid-planos .flutuante:nth-child(2) {
+      animation-delay: 1.6s;
+    }
+
+    .grid-planos .flutuante:nth-child(3) {
+      animation-delay: 3.2s;
+    }
+
     .card-plano {
       display: flex;
       flex-direction: column;
@@ -583,9 +713,16 @@
       position: relative;
     }
 
+    /* O plano recomendado "flutua" mais alto que os demais: sombra mais forte */
+    /* já em repouso, reforçando a hierarquia visual (Material Design). */
     .card-plano.destacado {
       border: 2px solid var(--accent-color);
       background-color: var(--bg-card-alt);
+      box-shadow: var(--sombra-flutuante);
+    }
+
+    .card-plano.destacado:hover {
+      transform: translateY(calc(var(--distancia-flutuacao) * -1.5));
     }
 
     .tag-plano-destaque {
@@ -600,6 +737,19 @@
       text-transform: uppercase;
       padding: 4px 12px;
       border-radius: 2px;
+      box-shadow: 0 6px 16px -4px rgba(var(--accent-glow-rgb), 0.5);
+      animation: pulsar-destaque 2.8s ease-in-out infinite;
+    }
+
+    /* Pulso discreto de brilho — chama atenção sem gritar */
+    @keyframes pulsar-destaque {
+      0%,
+      100% {
+        box-shadow: 0 6px 16px -4px rgba(var(--accent-glow-rgb), 0.5);
+      }
+      50% {
+        box-shadow: 0 6px 22px -2px rgba(var(--accent-glow-rgb), 0.85);
+      }
     }
 
     .plano-nome {
@@ -649,6 +799,19 @@
       gap: 24px;
     }
 
+    /* Atraso diferente por card: a flutuação não fica sincronizada */
+    .grid-depoimentos .flutuante:nth-child(1) {
+      animation-delay: 0.8s;
+    }
+
+    .grid-depoimentos .flutuante:nth-child(2) {
+      animation-delay: 2.4s;
+    }
+
+    .grid-depoimentos .flutuante:nth-child(3) {
+      animation-delay: 4s;
+    }
+
     .depoimento-aspas {
       color: var(--accent-color);
       font-family: var(--font-display);
@@ -679,6 +842,15 @@
       border-radius: 50%;
       object-fit: cover;
       border: 1px solid var(--border-color);
+      transition:
+        border-color 0.25s ease,
+        transform 0.25s ease;
+    }
+
+    /* Ao pairar o card, a foto do aluno ganha destaque discreto */
+    .painel-estrutural:hover .usuario-foto {
+      border-color: var(--accent-color);
+      transform: scale(1.08);
     }
 
     /* ===== 10. FORMULÁRIO ===== */
@@ -1144,7 +1316,7 @@
               sensores cinemáticos.
             </p>
           </div>
-          <div style="
+          <div class="indicador-tecnologia" style="
                 margin-top: 32px;
                 display: flex;
                 gap: 12px;
@@ -1154,7 +1326,7 @@
                 font-size: 0.875rem;
               ">
             <span>TECNOLOGIA PROPRIETÁRIA PULSE SCAN</span>
-            <i data-lucide="chevron-right" aria-hidden="true"></i>
+            <i data-lucide="chevron-right" aria-hidden="true" style="transition: transform 0.25s ease"></i>
           </div>
         </article>
 
@@ -1211,7 +1383,7 @@
 
       <div class="grid-planos">
         <!-- Plano Basic -->
-        <article class="painel-estrutural card-plano">
+        <article class="painel-estrutural card-plano flutuante">
           <div>
             <h3 class="plano-nome">Pulse Basic</h3>
             <p style="
@@ -1244,7 +1416,7 @@
         </article>
 
         <!-- Plano Pro (Destacado) -->
-        <article class="painel-estrutural card-plano destacado">
+        <article class="painel-estrutural card-plano destacado flutuante">
           <div class="tag-plano-destaque">Recomendado</div>
           <div>
             <h3 class="plano-nome">Pulse Pro</h3>
@@ -1282,7 +1454,7 @@
         </article>
 
         <!-- Plano Elite -->
-        <article class="painel-estrutural card-plano">
+        <article class="painel-estrutural card-plano flutuante">
           <div>
             <h3 class="plano-nome">Pulse Elite</h3>
             <p style="
@@ -1334,7 +1506,7 @@
       </div>
 
       <div class="grid-depoimentos">
-        <article class="painel-estrutural">
+        <article class="painel-estrutural flutuante">
           <div class="depoimento-aspas" aria-hidden="true">“</div>
           <blockquote class="depoimento-texto">
             A precisão das avaliações biométricas mudou completamente meu
@@ -1350,7 +1522,7 @@
           </div>
         </article>
 
-        <article class="painel-estrutural">
+        <article class="painel-estrutural flutuante">
           <div class="depoimento-aspas" aria-hidden="true">“</div>
           <blockquote class="depoimento-texto">
             O ambiente não parece uma academia barulhenta comum. É focado,
@@ -1365,7 +1537,7 @@
           </div>
         </article>
 
-        <article class="painel-estrutural">
+        <article class="painel-estrutural flutuante">
           <div class="depoimento-aspas" aria-hidden="true">“</div>
           <blockquote class="depoimento-texto">
             A flexibilidade 24/7 do plano Pro permite que eu treine às 05h da
@@ -1870,7 +2042,36 @@
         aplicarConfiguracoes();
       });
 
-      // ===== 5. VALIDAÇÃO DO FORMULÁRIO =====
+      // ===== 5. MICROINTERAÇÃO: EFEITO RIPPLE NOS BOTÕES (MATERIAL DESIGN) =====
+      const botoesComRipple = document.querySelectorAll(
+        ".btn-primario, .btn-secundario",
+      );
+
+      botoesComRipple.forEach((botao) => {
+        botao.addEventListener("click", (evento) => {
+          const preferenciaReduzida =
+            document.body.classList.contains("reduced-motion") ||
+            window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+          // Respeita a preferência de movimento reduzido: sem ripple
+          if (preferenciaReduzida) return;
+
+          const retangulo = botao.getBoundingClientRect();
+          const diametro = Math.max(retangulo.width, retangulo.height);
+          const raio = diametro / 2;
+
+          const ripple = document.createElement("span");
+          ripple.className = "efeito-ripple";
+          ripple.style.width = ripple.style.height = `${diametro}px`;
+          ripple.style.left = `${evento.clientX - retangulo.left - raio}px`;
+          ripple.style.top = `${evento.clientY - retangulo.top - raio}px`;
+
+          botao.appendChild(ripple);
+          ripple.addEventListener("animationend", () => ripple.remove());
+        });
+      });
+
+      // ===== 6. VALIDAÇÃO DO FORMULÁRIO =====
       const form = document.getElementById("form-cadastro");
       const msgSucesso = document.getElementById("mensagem-sucesso");
 
